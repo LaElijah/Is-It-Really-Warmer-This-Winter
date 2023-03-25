@@ -1,0 +1,48 @@
+Is It Really Warmer This Winter.
+
+IIRWTW is a website that allows a user to see data focused on
+comparing weather trends from the past to now, and deducing the 
+conclusive change compared to now.
+
+
+
+Possible API Data
+Temperature: The current temperature, high and low temperature forecasts, and hourly/daily temperature forecasts.
+
+Humidity: The current relative humidity and humidity forecast.
+
+Precipitation: The chance of precipitation, amount of precipitation, and precipitation type (e.g., rain, snow, sleet, etc.).
+
+Wind: The current wind speed, wind direction, and wind gusts forecast.
+
+UV index: The current UV index and UV index forecast.
+
+Air Quality Index: The current air quality index and air quality index forecast.
+
+Cloud cover: The current cloud cover percentage and cloud cover forecast.
+
+Sunrise and sunset times: The current and forecasted times for sunrise and sunset.
+
+Moon phase: The current moon phase and moon phase forecast.
+
+Visibility: The current visibility and visibility forecast.
+
+Weather alerts: Any severe weather alerts, such as thunderstorm warnings, tornado watches, etc.
+
+Historical weather data: Historical weather data for a particular location, including past temperature, precipitation, and wind speed information.
+
+Timezone information: The timezone information for a particular location.
+
+Geolocation information: The geolocation information (latitude and longitude) for a particular location.
+
+
+
+
+What do i want to show the user:
+
+Eventually globally but im gonna start with just U.S.A
+
+    - Blank outline of america or by state and show what parts of the us are hotter
+    than it was the same hour last year and the color of the state will be bolder wither orange or blue to 
+    denote hotter or colder and when hovered on shows how much hotter or colder
+    - 
