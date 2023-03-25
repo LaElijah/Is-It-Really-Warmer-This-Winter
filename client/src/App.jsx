@@ -18,6 +18,7 @@ export default function App() {
     const response = await fetch('/states');
     const data = await response.json();
     setInfo(data)
+    console.log(data)
   }
 
   useEffect(() => {

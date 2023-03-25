@@ -2,7 +2,7 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 4000
 const weather = require('weather-js');
 
 
@@ -103,8 +103,8 @@ async function assignData() {
 }
 
 // Call assignData() to populate the state array
-assignData();
 
+assignData();
 // Start the server
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
@@ -113,6 +113,6 @@ app.listen(port, () => {
 
 // Endpoint to get the state array
 app.get('/states', (req, res) => {
-  console.log({results: state})
+
   res.json({results: state});
 });
