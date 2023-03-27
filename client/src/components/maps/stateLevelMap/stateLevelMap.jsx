@@ -13,7 +13,7 @@ export default function StateLevelMap() {
   const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
   async function fetchData() {
-    const response = await fetch('/states');
+    const response = await fetch('/temperature/current');
     const data = await response.json();
     setInfo(data)
     console.log(data)

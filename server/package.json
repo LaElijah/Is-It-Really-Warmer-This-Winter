@@ -13,7 +13,11 @@
   "dependencies": {
     "express": "^4.18.2",
     "nodemon": "^2.0.22",
+    "nws": "^1.1.1",
     "path": "^0.12.7",
-    "weather-js": "^2.0.0"
+    "weather-api-data": "^1.0.8",
+    "weather-js": "^2.0.0",
+    "weathered": "^0.3.4",
+    "weathers-watch": "^1.0.7"
   }
 }
