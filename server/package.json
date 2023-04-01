@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "stop": "gulp stopRedis"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +20,9 @@
     "weather-js": "^2.0.0",
     "weathered": "^0.3.4",
     "weathers-watch": "^1.0.7"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-shell": "^0.8.0"
   }
 }

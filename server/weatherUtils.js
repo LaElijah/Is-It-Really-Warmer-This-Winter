@@ -1,60 +1,363 @@
-
-const states = [
-  { name: 'Alabama', abbreviation: 'AL', capital: 'Montgomery', coordinates: "32.3777,-86.3006" },
-  { name: 'Alaska', abbreviation: 'AK', capital: 'Juneau', coordinates: "58.3016,-134.4197" },
-  { name: 'Arizona', abbreviation: 'AZ', capital: 'Phoenix', coordinates: "33.4484,-112.0740" },
-  { name: 'Arkansas', abbreviation: 'AR', capital: 'Little Rock', coordinates: "34.7465,-92.2896" },
-  { name: 'California', abbreviation: 'CA', capital: 'Sacramento', coordinates: "38.5767,-121.4934" },
-  { name: 'Colorado', abbreviation: 'CO', capital: 'Denver', coordinates: "39.7392,-104.9903" },
-  { name: 'Connecticut', abbreviation: 'CT', capital: 'Hartford', coordinates: "41.7658,-72.6734" },
-  { name: 'Delaware', abbreviation: 'DE', capital: 'Dover', coordinates: "39.1582,-75.5244" },
-  { name: 'Florida', abbreviation: 'FL', capital: 'Tallahassee', coordinates: "30.4383,-84.2807" },
-  { name: 'Georgia', abbreviation: 'GA', capital: 'Atlanta', coordinates: "33.7490,-84.3880" },
-  { name: 'Hawaii', abbreviation: 'HI', capital: 'Honolulu', coordinates: "21.3070,-157.8580" },
-  { name: 'Idaho', abbreviation: 'ID', capital: 'Boise', coordinates: "43.6187,-116.2146" },
-  { name: 'Illinois', abbreviation: 'IL', capital: 'Springfield', coordinates: "39.7817,-89.6501" },
-  { name: 'Indiana', abbreviation: 'IN', capital: 'Indianapolis', coordinates: "39.7684,-86.1581" },
-  { name: 'Iowa', abbreviation: 'IA', capital: 'Des Moines', coordinates: "41.8780,-93.0977" },
-  { name: 'Kansas', abbreviation: 'KS', capital: 'Topeka', coordinates: "39.0481,-95.6773" },
-  { name: 'Kentucky', abbreviation: 'KY', capital: 'Frankfort', coordinates: "38.1867,-84.8753" },
-  { name: 'Louisiana', abbreviation: 'LA', capital: 'Baton Rouge', coordinates: "30.4515,-91.1871" },
-  { name: 'Maine', abbreviation: 'ME', capital: 'Augusta', coordinates: "44.3078,-69.7824" },
-  { name: 'Maryland', abbreviation: 'MD', capital: 'Annapolis', coordinates: "38.9784,-76.4922" },
-  { name: 'Massachusetts', abbreviation: 'MA', capital: 'Boston', coordinates: "42.3601,-71.0589" },
-  { name: 'Michigan', abbreviation: 'MI', capital: 'Lansing', coordinates: "42.7325,-84.5555" },
-  { name: 'Minnesota', abbreviation: 'MN', capital: 'Saint Paul', coordinates: '44.95,-93.09' },
-  { name: 'Mississippi', abbreviation: 'MS', capital: 'Jackson', coordinates: '32.32,-90.207' },
-  { name: 'Missouri', abbreviation: 'MO', capital: 'Jefferson City', coordinates: '38.57,-92.19' },
-  { name: 'Montana', abbreviation: 'MT', capital: 'Helena', coordinates: '46.58,-112.02' },
-  { name: 'Nebraska', abbreviation: 'NE', capital: 'Lincoln', coordinates: '40.81,-96.68' },
-  { name: 'Nevada', abbreviation: 'NV', capital: 'Carson City', coordinates: '39.16,-119.75' },
-  { name: 'New Hampshire', abbreviation: 'NH', capital: 'Concord', coordinates: '43.2,-71.54' },
-  { name: 'New Jersey', abbreviation: 'NJ', capital: 'Trenton', coordinates: '40.22,-74.76' },
-  { name: 'New Mexico', abbreviation: 'NM', capital: 'Santa Fe', coordinates: '35.69,-105.94' },
-  { name: 'New York', abbreviation: 'NY', capital: 'Albany', coordinates: '42.66,-73.78' },
-  { name: 'North Carolina', abbreviation: 'NC', capital: 'Raleigh', coordinates: '35.77,-78.63' },
-  { name: 'North Dakota', abbreviation: 'ND', capital: 'Bismarck', coordinates: '46.81,-100.78' },
-  { name: 'Ohio', abbreviation: 'OH', capital: 'Columbus', coordinates: '39.96,-83.0' },
-  { name: 'Oklahoma', abbreviation: 'OK', capital: 'Oklahoma City', coordinates: '35.48,-97.53' },
-  { name: 'Oregon', abbreviation: 'OR', capital: 'Salem', coordinates: '44.93,-123.03' },
-  { name: 'Pennsylvania', abbreviation: 'PA', capital: 'Harrisburg', coordinates: '40.27,-76.88' },
-  { name: 'Rhode Island', abbreviation: 'RI', capital: 'Providence', coordinates: '41.82,-71.42' },
-  { name: 'South Carolina', abbreviation: 'SC', capital: 'Columbia', coordinates: '34.0,-81.03' },
-  { name: 'South Dakota', abbreviation: 'SD', capital: 'Pierre', coordinates: '44.37,-100.35' },
-  { name: 'Tennessee', abbreviation: 'TN', capital: 'Nashville', coordinates: "36.1627,-86.7816" },
-  { name: 'Texas', abbreviation: 'TX', capital: 'Austin', coordinates: "30.2672,-97.7431" },
-  { name: 'Utah', abbreviation: 'UT', capital: 'Salt Lake City', coordinates: "39.3210,-111.0937" },
-  { name: 'Vermont', abbreviation: 'VT', capital: 'Montpelier', coordinates: "44.2601,-72.5754" },
-  { name: 'Virginia', abbreviation: 'VA', capital: 'Richmond', coordinates: "37.5407,-77.4360" },
-  { name: 'Washington', abbreviation: 'WA', capital: 'Olympia', coordinates: "47.0379,-122.9007" },
-  { name: 'West Virginia', abbreviation: 'WV', capital: 'Charleston', coordinates: "38.3363,-81.6122" },
-  { name: 'Wisconsin', abbreviation: 'WI', capital: 'Madison', coordinates: "43.0731,-89.4012" },
-  { name: 'Wyoming', abbreviation: 'WY', capital: 'Cheyenne', coordinates: "41.1400,-104.8202" }
-]
+var { getWeather } = require("weathers-watch");
 
 const weather = require('weather-js');
-function getLastYear() { // Gets date of inputted year - 1 year, defaults to current day - 1 year
-  // Create a new Date object for the current date
+
+const states = [
+  {
+    name: 'Alabama',
+    abbreviation: 'AL',
+    capital: 'Montgomery',
+    latitude: 32,
+    longitude: -86
+  },
+  {
+    name: 'Alaska',
+    abbreviation: 'AK',
+    capital: 'Juneau',
+    latitude: 58,
+    longitude: -134
+  },
+  {
+    name: 'Arizona',
+    abbreviation: 'AZ',
+    capital: 'Phoenix',
+    latitude: 33,
+    longitude: -112
+  },
+  {
+    name: 'Arkansas',
+    abbreviation: 'AR',
+    capital: 'Little Rock',
+    latitude: 34,
+    longitude: -92
+  },
+  {
+    name: 'California',
+    abbreviation: 'CA',
+    capital: 'Sacramento',
+    latitude: 38,
+    longitude: -121
+  },
+  {
+    name: 'Colorado',
+    abbreviation: 'CO',
+    capital: 'Denver',
+    latitude: 39,
+    longitude: -104
+  },
+  {
+    name: 'Connecticut',
+    abbreviation: 'CT',
+    capital: 'Hartford',
+    latitude: 41,
+    longitude: -72
+  },
+  {
+    name: 'Delaware',
+    abbreviation: 'DE',
+    capital: 'Dover',
+    latitude: 39,
+    longitude: -75
+  },
+  {
+    name: 'Florida',
+    abbreviation: 'FL',
+    capital: 'Tallahassee',
+    latitude: 30,
+    longitude: -84
+  },
+  {
+    name: 'Georgia',
+    abbreviation: 'GA',
+    capital: 'Atlanta',
+    latitude: 33,
+    longitude: -84
+  },
+  {
+    name: 'Hawaii',
+    abbreviation: 'HI',
+    capital: 'Honolulu',
+    latitude: 21,
+    longitude: -157
+  },
+  {
+    name: 'Idaho',
+    abbreviation: 'ID',
+    capital: 'Boise',
+    latitude: 43,
+    longitude: -116
+  },
+  {
+    name: 'Illinois',
+    abbreviation: 'IL',
+    capital: 'Springfield',
+    latitude: 39,
+    longitude: -89
+  },
+  {
+    name: 'Indiana',
+    abbreviation: 'IN',
+    capital: 'Indianapolis',
+    latitude: 39,
+    longitude: -86
+  },
+  {
+    name: 'Iowa',
+    abbreviation: 'IA',
+    capital: 'Des Moines',
+    latitude: 41,
+    longitude: -93
+  },
+  {
+    name: 'Kansas',
+    abbreviation: 'KS',
+    capital: 'Topeka',
+    latitude: 39,
+    longitude: -95
+  },
+  {
+    name: 'Kentucky',
+    abbreviation: 'KY',
+    capital: 'Frankfort',
+    latitude: 38,
+    longitude: -84
+  },
+  {
+    name: 'Louisiana',
+    abbreviation: 'LA',
+    capital: 'Baton Rouge',
+    latitude: 30,
+    longitude: -91
+  },
+  {
+    name: 'Maine',
+    abbreviation: 'ME',
+    capital: 'Augusta',
+    latitude: 44,
+    longitude: -69
+  },
+  {
+    name: 'Maryland',
+    abbreviation: 'MD',
+    capital: 'Annapolis',
+    latitude: 38,
+    longitude: -76
+  },
+  {
+    name: 'Massachusetts',
+    abbreviation: 'MA',
+    capital: 'Boston',
+    latitude: 42,
+    longitude: -71
+  },
+  {
+    name: 'Michigan',
+    abbreviation: 'MI',
+    capital: 'Lansing',
+    latitude: 42,
+    longitude: -84
+  },
+  {
+    name: 'Minnesota',
+    abbreviation: 'MN',
+    capital: 'Saint Paul',
+    latitude: 44,
+    longitude: -93
+  },
+  {
+    name: 'Mississippi',
+    abbreviation: 'MS',
+    capital: 'Jackson',
+    latitude: 32,
+    longitude: -90
+  },
+  {
+    name: 'Missouri',
+    abbreviation: 'MO',
+    capital: 'Jefferson City',
+    latitude: 38,
+    longitude: -92
+  },
+  {
+    name: 'Montana',
+    abbreviation: 'MT',
+    capital: 'Helena',
+    latitude: 46,
+    longitude: -112
+  },
+  {
+    name: 'Nebraska',
+    abbreviation: 'NE',
+    capital: 'Lincoln',
+    latitude: 40,
+    longitude: -96
+  },
+  {
+    name: 'Nevada',
+    abbreviation: 'NV',
+    capital: 'Carson City',
+    latitude: 39,
+    longitude: -119
+  },
+  {
+    name: 'New Hampshire',
+    abbreviation: 'NH',
+    capital: 'Concord',
+    latitude: 43,
+    longitude: -71
+  },
+  {
+    name: 'New Jersey',
+    abbreviation: 'NJ',
+    capital: 'Trenton',
+    latitude: 40,
+    longitude: -74
+  },
+  {
+    name: 'New Mexico',
+    abbreviation: 'NM',
+    capital: 'Santa Fe',
+    latitude: 35,
+    longitude: -105
+  },
+  {
+    name: 'New York',
+    abbreviation: 'NY',
+    capital: 'Albany',
+    latitude: 42,
+    longitude: -73
+  },
+  {
+    name: 'North Carolina',
+    abbreviation: 'NC',
+    capital: 'Raleigh',
+    latitude: 35,
+    longitude: -78
+  },
+  {
+    name: 'North Dakota',
+    abbreviation: 'ND',
+    capital: 'Bismarck',
+    latitude: 46,
+    longitude: -100
+  },
+  {
+    name: 'Ohio',
+    abbreviation: 'OH',
+    capital: 'Columbus',
+    latitude: 39,
+    longitude: -83
+  },
+  {
+    name: 'Oklahoma',
+    abbreviation: 'OK',
+    capital: 'Oklahoma City',
+    latitude: 35,
+    longitude: -97
+  },
+  {
+    name: 'Oregon',
+    abbreviation: 'OR',
+    capital: 'Salem',
+    latitude: 44,
+    longitude: -123
+  },
+  {
+    name: 'Pennsylvania',
+    abbreviation: 'PA',
+    capital: 'Harrisburg',
+    latitude: 40,
+    longitude: -76
+  },
+  {
+    name: 'Rhode Island',
+    abbreviation: 'RI',
+    capital: 'Providence',
+    latitude: 41,
+    longitude: -71
+  },
+  {
+    name: 'South Carolina',
+    abbreviation: 'SC',
+    capital: 'Columbia',
+    latitude: 34,
+    longitude: -81
+  },
+  {
+    name: 'South Dakota',
+    abbreviation: 'SD',
+    capital: 'Pierre',
+    latitude: 44,
+    longitude: -100
+  },
+  {
+    name: 'Tennessee',
+    abbreviation: 'TN',
+    capital: 'Nashville',
+    latitude: 36,
+    longitude: -86
+  },
+  {
+    name: 'Texas',
+    abbreviation: 'TX',
+    capital: 'Austin',
+    latitude: 30,
+    longitude: -97
+  },
+  {
+    name: 'Utah',
+    abbreviation: 'UT',
+    capital: 'Salt Lake City',
+    latitude: 39,
+    longitude: -111
+  },
+  {
+    name: 'Vermont',
+    abbreviation: 'VT',
+    capital: 'Montpelier',
+    latitude: 44,
+    longitude: -72
+  },
+  {
+    name: 'Virginia',
+    abbreviation: 'VA',
+    capital: 'Richmond',
+    latitude: 37,
+    longitude: -77
+  },
+  {
+    name: 'Washington',
+    abbreviation: 'WA',
+    capital: 'Olympia',
+    latitude: 47,
+    longitude: -122
+  },
+  {
+    name: 'West Virginia',
+    abbreviation: 'WV',
+    capital: 'Charleston',
+    latitude: 38,
+    longitude: -81
+  },
+  {
+    name: 'Wisconsin',
+    abbreviation: 'WI',
+    capital: 'Madison',
+    latitude: 43,
+    longitude: -89
+  },
+  {
+    name: 'Wyoming',
+    abbreviation: 'WY',
+    capital: 'Cheyenne',
+    latitude: 41,
+    longitude: -104
+  }
+]
+
+
+
+function getLastYear() {
 
   // Get past date function here {
   let workingDate = new Date()
@@ -72,6 +375,19 @@ function getLastYear() { // Gets date of inputted year - 1 year, defaults to cur
   return formattedDate; // make a return
 }
 
+
+function setWeather(stateInfo) {
+  return new Promise((resolve, reject) => {
+    weather.find({ search: stateInfo.name + ', ' + stateInfo.abbreviation, degreeType: 'F' }, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ name: stateInfo.name, abbreviation: stateInfo.abbreviation, capital: stateInfo.capital, temperature: result[0].current.temperature, date: result[0].current.date });
+      }
+    });
+  });
+}
+
 async function assignHistoryData(datetime) {
 
   const apikey = '4RUJQ824B7UYMW44GQCAQYE9J';
@@ -80,7 +396,7 @@ async function assignHistoryData(datetime) {
 
   for (const state of states) {
 
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${state.coordinates}/${date}?unitGroup=us&include=days&key=${apikey}&contentType=json`;
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${state.latitude}/${date}?unitGroup=us&include=days&key=${apikey}&contentType=json`;
     const response = await fetch(url)
     const data = await response.json()
     const requestedData = {
@@ -105,16 +421,54 @@ async function assignHistoryData(datetime) {
 }
 
 
-function getWeather(stateInfo) {
-  return new Promise((resolve, reject) => {
-    weather.find({ search: stateInfo.name + ', ' + stateInfo.abbreviation, degreeType: 'F' }, function (err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({name: stateInfo.name, abbreviation: stateInfo.abbreviation, capital: stateInfo.capital, temperature: result[0].current.temperature, date: result[0].current.date});
-      }
-    });
-  });
+
+
+
+
+
+async function assignMissingData(state) {
+  const apikey = '4RUJQ824B7UYMW44GQCAQYE9J';
+  const datetime = new Date();
+  const date = datetime.getFullYear() + '-' + (datetime.getMonth() + 1) + '-' + datetime.getDate();
+  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${state.latitude}/${date}?unitGroup=us&include=days&key=${apikey}&contentType=json`;
+  const response = await fetch(url)
+  const data = await response.json()
+  const requestedData = {
+    queryType: "METERED",
+    temperature: data.days[0].temp
+  }
+  const missingData = {
+    name: state.name,
+    abbreviation: state.abbreviation,
+    capital: state.capital,
+    data: requestedData
+  }
+  return missingData
+
+}
+
+
+async function assignCurrentData() {
+  const currentData = []
+
+  for (const state of states) {
+    var weatherResult = await setWeather(state.capital + ", " + state.abbreviation);
+    if (!weatherResult.currentWeather) {
+      currentData.push(await assignMissingData(state))
+
+    } else {
+      currentData.push({
+        name: state.name,
+        abbreviation: state.abbreviation,
+        capital: state.capital,
+        data: {
+          queryType: "FREE",
+          temperature: weatherResult.currentWeather.temperature
+        }
+      });
+    }
+  }
+  return currentData
 }
 
 
@@ -125,28 +479,15 @@ function getWeather(stateInfo) {
 
 
 // Function to populate the state array with weather information
-async function assignData() {
 
-const state = [];
-  try {
-    for (const stateInfo of states) {
-      const temperature = await getWeather(stateInfo);
-      state.push(await temperature);
-    }
-    
-    return state;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 
 
 module.exports = {
-  assignHistoryData: assignHistoryData, 
-  getLastYear: getLastYear, 
-  states: states, 
-  assignData: assignData
+  assignHistoryData: assignHistoryData,
+  getLastYear: getLastYear,
+  states: states,
+  assignCurrentWeather: assignCurrentData
 }
 /*
 // Options:
