@@ -5,7 +5,7 @@ const port = 4000
 
 
 
-const { assignHistoryData, assignCurrentData } = require('./weatherUtils')
+const { assignHistoryData, assignCurrentData } = require('./weatherUtils/states')
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
@@ -33,34 +33,5 @@ app.listen(port, () => {
 });
 
 
-// Endpoint to get the state array
-app.get('/temperature/current', async (req, res) => {
-  const response = await assignCurrentData()
-  res.json({results: response});
-});
 
-app.get('/temperature/:date', async (req, res) => {
-  
-  const { date } = req.params;
-
-  // create a Date object from the date parameter
-  const searchDate = date;
-  const response = await assignHistoryData(searchDate)
-  res.json({results: response});
-});
-
-app.get('/temperature/difference/', async (req, res) => {
-  
-  
-
-  // create a Date object from the date parameter;
-  const currentData = await assignCurrentData()
-  const pastData = await assignHistoryData()
-  currentData.sort((a, b) => a.name.localeCompare(b.name));
-  pastData.sort((a, b) => a.name.localeCompare(b.name));
-  
-  
-  const response = currentData.map((data, i) => pastData[i].temperature - data.temperature);
-  res.json({results: response});
-});
 

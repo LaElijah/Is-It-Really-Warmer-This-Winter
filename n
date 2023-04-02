@@ -1,7 +1,10 @@
 
-const { getNWSData } = require("./NWSApi");
-const { getWeathersWatchData } = require("./WeathersWatchApi");
-const { getOpenWeatherData } = require("./OpenWeatherApi");
+const { getNWSData } = require("../NWSApi");
+const { getWeathersWatchData } = require("../WeathersWatchApi");
+const { getOpenWeatherData } = require("../OpenWeatherApi");
+
+
+
 
 
 
@@ -49,7 +52,7 @@ class WeatherInfo { // This class is the parent class for the other classes
      * @returns Returns a new instance of the WeatherInfo class
      * @description This function returns the weather data from the weathers-watch API, needs to be awaited
      */
-    static async WeathersWatchApi(state) { // This class is the child class for the weathers-watch API
+    static async weathersWatchAPI(state) { // This class is the child class for the weathers-watch API
 
         // const { forecastSummary } = weatherResult; // has min max temp
         const response = await getWeathersWatchData(state)
@@ -74,7 +77,7 @@ class WeatherInfo { // This class is the parent class for the other classes
      * @returns Returns a new instance of the WeatherInfo class
      * @description This function returns the weather data from the NWS API, needs to be awaited
      */
-    static async NWSApi(state) { // This class is the child class for the NWS API
+    static async nwsAPI(state) { // This class is the child class for the NWS API
         const data = await getNWSData(state)
         const { updateTime, periods } = data
         const weather =
@@ -96,8 +99,8 @@ class WeatherInfo { // This class is the parent class for the other classes
      */
 
 
-    static async OpenWeatherApi(state) { // This class is the child class for the OpenWeather API   
-        const data = await getOpenWeatherData(state)
+    static async openWeatherAPI(state, date) { // This class is the child class for the OpenWeather API   
+        const data = await getOpenWeatherData(state, date)
         const { days } = data
         const weather =
         {
@@ -109,10 +112,40 @@ class WeatherInfo { // This class is the parent class for the other classes
         }
         return new WeatherInfo(weather)
     }
+
+    /**
+     * 
+     * @param {*} state Specifies the state to get the weather for.
+     * @returns Returns a new instance of the WeatherInfo class
+     * @description This function returns the weather data and has 2 failsafes for missing data from an api, needs to be awaited.
+     */
+
+    static async getInfo(state, n = 0) { // This function attempts to get the weather data from the 3 APIs, if one fails it will try the next one
+        const weather = await currentData(state)
+        return weather
+
+
+
+    }
+
+
+
 }
 
 
 
 
 
+
+
+
 module.exports = { WeatherInfo: WeatherInfo }
+// EXTENDED CLASS 
+
+
+
+const WeatherInfo = require('./WeatherInfo') // Importing the parent class
+
+
+
+

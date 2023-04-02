@@ -1,12 +1,13 @@
-const { states } = require("./weatherUtils");
-const { WeatherInfo } = require("./WeatherInfo");
+const { states } = require("./weatherUtils/states");
+const { WeatherInfo, WeatherTrends } = require("./weatherUtils/Weather/WeatherInfo");
 
-async function testt() {
-  const WW = await WeatherInfo.WeathersWatchApi(states[0]);
-  const NWS = await WeatherInfo.NWSApi(states[0]);
-  const OW = await WeatherInfo.OpenWeatherApi(states[0]);
-  const data = { WW, NWS, OW };
-  console.log(data);
+
+
+async function test() {
+    const state = states[0]
+    const GeneralWeatherTrends = await WeatherTrends.openWeatherAPI(state, '2022-05-01')
+    console.log(GeneralWeatherTrends)
+    
 }
 
-testt();
+test()
