@@ -1,5 +1,5 @@
 const { getWeather } = require('weathers-watch');
-const { states } = require('./states');
+const { states } = require('../states');
 
 
 

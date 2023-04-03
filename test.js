@@ -1,5 +1,5 @@
 
-const { states } = require('./weatherUtils/states')
+const { states } = require('./server/weatherUtils/states')
 
 
 

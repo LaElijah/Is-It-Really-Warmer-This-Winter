@@ -1,7 +1,8 @@
 
-const { getNWSData } = require("../NWSApi");
-const { getWeathersWatchData } = require("../WeathersWatchApi");
-const { getOpenWeatherData } = require("../OpenWeatherApi");
+const { getNWSData } = require("./API's/NWSApi");
+const { getWeathersWatchData } = require("./API's/WeathersWatchApi");
+const { getOpenWeatherData } = require("./API's/OpenWeatherApi");
+const { states } = require("./states");
 
 
 
@@ -21,9 +22,11 @@ async function currentData(state, n = 0) {
         }
     }
 } catch (error) {
-    console.log(error)
+    // console.log(error); // The reason for all the errors, assumed to be when an api fails, good to know for tracking
 }
 }
+
+
 
 
 
@@ -153,6 +156,26 @@ class WeatherInfo { // This class is the parent class for the other classes
 
     }
 
+    static async getAllInfo(){
+        const weatherArray = []
+        for (const state of states) {
+            const weather = await WeatherInfo.getInfo(state)
+            weatherArray.push(weather)
+        }
+        return weatherArray
+    }
+
+    static async getAllHistoricalInfo(date){
+        
+        const weatherArray = []
+        for (const state of states) {
+           
+            const weather = await WeatherInfo.openWeatherAPI(state, date)
+            weatherArray.push(weather)
+        }
+        return weatherArray
+    }
+
 
 
 }
@@ -161,13 +184,14 @@ class WeatherInfo { // This class is the parent class for the other classes
 
 
 class WeatherTrends extends WeatherInfo { // This class is the child class for the weathers-watch API   
-    constructor(weather, trends) { // Setting Object Destructuring
+    constructor(weather, trends, pastData) { // Setting Object Destructuring
         super(weather)
         
         this.trends = trends // will be difference of current temp and temp from past
+        this.pastData = pastData
     }
 
-    static async GeneralWeatherTrends(state, date) { // This class is the child class for the weathers-watch API
+    static async getTrends(state, date) { // This class is the child class for the weathers-watch API
         const data = await WeatherInfo.getInfo(state)
         const pastData = await WeatherInfo.openWeatherAPI(state, date)
         const temperature  = data.temperature
@@ -177,7 +201,16 @@ class WeatherTrends extends WeatherInfo { // This class is the child class for t
         {
             temperatureTrend: temperatureTrend,
         }
-        return new WeatherTrends(data, trends)
+        return new WeatherTrends(data, trends, pastData)
+    }
+
+    static async getAllTrends(date){
+        const weatherArray = []
+        for (const state of states) {
+            const weather = await WeatherTrends.getTrends(state, date)
+            weatherArray.push(weather)
+        }
+        return weatherArray
     }
 
 }

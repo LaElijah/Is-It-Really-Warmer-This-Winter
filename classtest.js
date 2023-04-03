@@ -1,5 +1,5 @@
-const { states } = require("./weatherUtils/states");
-const { WeatherInfo, WeatherTrends } = require("./weatherUtils/Weather/WeatherInfo");
+const { states } = require("./server/weatherUtils/states");
+const { WeatherInfo, WeatherTrends } = require("./server/weatherUtils/WeatherInfo");
 
 
 
