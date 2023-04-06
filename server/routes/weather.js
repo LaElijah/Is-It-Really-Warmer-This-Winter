@@ -22,6 +22,21 @@ router.get('/', async (req, res) => { // returns an array of objects
 
 });
 
+router.get('/:date', async (req, res) => { // returns an array of objects
+    console.log(req.params.date)
+    try {
+        
+        const response = await WeatherInfo.getAllInfo(req.params.date)
+        
+        res.json({ results: response });
+    } catch (error) {
+        res.json({ results: error });
+    }
+
+});
+
+
+
 router.get('/:state', async (req, res) => { // returns an array of objects
     
         const state = states.find(state => state.name === req.params.state);
