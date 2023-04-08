@@ -24,7 +24,7 @@ async function cacheValidate(key, callback) {
       await client.quit();
       return JSON.parse(data)
     }
-    
+
     const result = await callback();
     await client.setex(key, 3600, JSON.stringify(result));
     await client.quit();
