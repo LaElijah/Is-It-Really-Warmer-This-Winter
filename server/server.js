@@ -18,6 +18,10 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', 'dist', "index.html"));
 });
 
+app.get("/healthy", (req, res) => {
+  res.status(200);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 });
