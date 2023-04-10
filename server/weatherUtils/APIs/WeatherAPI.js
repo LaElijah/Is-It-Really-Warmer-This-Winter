@@ -19,8 +19,8 @@ function urlBuilder(state, date, type) {
 
   const period = requestPeriod(date, AGE_LIMIT);
 
-  const apikey = '946fe7d7c640434b807214414230404';
-  let requestType = ``;
+  const apikey = process.env.WEATHER_API_KEY ;
+  let requestType
 
   if (period < AGE_LIMIT) {
     requestType = `forecast.json?`

@@ -9,6 +9,8 @@ const { dateModifier } = require("../weatherUtils/tools/dateModifier");
 
 
 // Endpoint to get the state array
+
+
 router.get('/', async (req, res) => { // returns an array of objects
     
     try {

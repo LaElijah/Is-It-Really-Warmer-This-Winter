@@ -68,8 +68,6 @@ class WeatherInfo { // This class is the parent class for the other classes
 
     static async weatherAPI(state, date, type) { // if no hour is specified, 0 is used
         const response = await getWeatherData(state, date, type);
-        console.log(response);
-        console.log(date)
 
         
 
@@ -132,7 +130,7 @@ class WeatherInfo { // This class is the parent class for the other classes
      * @param {*} type  The type of weather data to get, defaults to hourly
      * @returns  Returns an array of weather data for every state in the states array
      */
-
+// TODO: change for loop to promise.all or allsettled
     static async getAllInfo(date, type) { // This function attempts to get data for every state in the states array, needs to be awaited
         const weatherArray = []
         for (const state of states) {
