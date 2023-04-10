@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-const port = 4000
+const port = process.env.PORT || 3000
 const weather = require('./routes/weather.js')
 require('dotenv').config();
 
