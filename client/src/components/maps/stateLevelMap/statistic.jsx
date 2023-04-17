@@ -19,7 +19,7 @@ function Statistic(props) {
         <Box>
             <Stack direction="row" spacing={1}>
                 {trendDirection ? <ArrowDropUpIcon sx={{ color: 'green'}} /> : <ArrowDropDownIcon sx={{ color: 'red'}} />}
-                <Typography >{props.temperature}º</Typography>
+                <Typography variant="h3" sx={{ color: "#c6d300"}}>{props.temperature}º</Typography>
             </Stack>
         </Box>
 
