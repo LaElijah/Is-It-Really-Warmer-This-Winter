@@ -115,7 +115,9 @@ export default function StateLevelMap() {
   const [info, setInfo] = useState({});
   const [selected, setSelected] = useState();
   const [mapData, setMapData] = useState({});
-  const [value, setValue] = useState(dayjs('2022-04-17'));
+  const [pastDate, setPastDate] = useState(dayjs('2022-04-17'));
+  const [primaryDate, setPrimaryDate] = useState(dayjs('2022-04-17'));
+  const [secondaryDate, setSecondaryDate] = useState(dayjs('2021-04-17'));
   const [menu , setMenu] = useState();
 
   const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
@@ -147,7 +149,7 @@ export default function StateLevelMap() {
   }
 
 
-  async function compareInfo(n, primaryDate = '04-04-2022', secondaryDate = '03-02-2021') { // not working
+  async function compareInfo() { // not working
 
 
 
@@ -178,7 +180,7 @@ export default function StateLevelMap() {
   async function pastInfo() {
     setIsLoading(true);
 
-    const currentDate = dayjs(value); // Get the current date as a Day.js object
+    const currentDate = dayjs(pastDate); // Get the current date as a Day.js object
     const formattedDate = currentDate.format('YYYY-MM-DD'); // Format the date as 'YYYY-MM-DD' string
 
 
@@ -254,8 +256,6 @@ export default function StateLevelMap() {
 
   useEffect(() => {
     mapSelectionHandler()
-
-
   }, [selected])
 
   return (
@@ -292,10 +292,30 @@ TODO: add a legend that shows the temperature range and the colors that correspo
 
 
               <Grid item>
+                <Stack direction="column" spacing={2}>
 
                 <Button variant="contained" onClick={compareInfo}>
                   Compare
                 </Button>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Stack direction="column" spacing={2}>
+                    <DatePicker
+                      label="Controlled picker"
+                      value={primaryDate}
+                      onChange={(newValue) => setPrimaryDate(newValue)}
+
+                    />
+
+                    <DatePicker
+                      label="Controlled picker"
+                      value={secondaryDate}
+                      onChange={(newValue) => setSecondaryDate(newValue)}
+
+                    />
+                  </Stack>
+                  </LocalizationProvider>
+                  </Stack>
 
               </Grid>
 
@@ -311,8 +331,8 @@ TODO: add a legend that shows the temperature range and the colors that correspo
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Controlled picker"
-                      value={value}
-                      onChange={(newValue) => setValue(newValue)}
+                      value={pastDate}
+                      onChange={(newValue) => setPastDate(newValue)}
 
                     />
                   </LocalizationProvider>
