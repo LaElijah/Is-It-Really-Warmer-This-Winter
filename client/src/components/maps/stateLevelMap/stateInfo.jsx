@@ -1,7 +1,16 @@
 import { Stack, Button, Divider, Typography, Box, Grid, Paper, TableCell, TableBody, Table, TableRow, TableHead, TableContainer } from '@mui/material';
 import Statistic from './statistic';
 import { useState } from 'react';
-import { useEffect } from 'react';
+
+
+
+// Future Updates
+// 1. Disable Primary and Secondary buttons when its not needed
+// 2. Figure out a fix for Invalid Date when comparing data
+// 3. Make Table Scrollable
+// 4. Add a button to switch between Fahrenheit and Celsius
+// 5. Add a button to switch between Hourly and Daily
+
 
 export default function StateInfo(props) {
     const regularFetch = {info: props.data}
@@ -13,7 +22,7 @@ export default function StateInfo(props) {
 
         dataTransfer = regularFetch
 
-        } else  {
+        } else {
             dataTransfer = props.data[range]
         }
 
@@ -51,6 +60,7 @@ export default function StateInfo(props) {
            <Stack direction="row" spacing={1}>
             <Button variant="contained" sx={{ backgroundColor: '#c6d300', color: '#1a1a1a', marginRight: 1 }} onClick={() => setRange('foundPrimaryData')}>Primary Date</Button>
             <Button variant="contained" sx={{ backgroundColor: '#c6d300', color: '#1a1a1a', marginLeft: 1 }} onClick={() => setRange('foundSecondaryData')}>Secondary Date</Button>
+            <Button variant="contained" sx={{ backgroundColor: '#c6d300', color: '#1a1a1a', marginLeft: 1 }} onClick={() => setRange('foundCompareData')}>Compare </Button>
             </Stack>
             <Typography variant='h2' sx={{ color: '#c6d300', marginBottom: 1 }}>{stateInfo.Name}</Typography>
             <Divider sx={{ width: '100%', marginBottom: 2 }} />

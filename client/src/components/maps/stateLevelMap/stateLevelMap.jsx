@@ -12,7 +12,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import StateInfo from './stateInfo.jsx';
 
-
+// Future Updates
+// 1. Chnage date picker to datetime picker
+// 2. Add more accesible buttons for smaller states/regions
+// 3. Add a legend for the colors
+// 4. Refractor code
+// 5. add a bug submit form
 
 
 
@@ -24,93 +29,8 @@ import StateInfo from './stateInfo.jsx';
 
 export default function StateLevelMap() {
 
-
-
-  const infod = {
-    "date": "2022-04-01T05:00:00.000Z",
-    "period": 0,
-    "temperature": 57,
-    "requestState": {
-      "name": "Alabama",
-      "abbreviation": "AL",
-      "capital": "Montgomery",
-      "latitude": 32,
-      "longitude": -86
-    },
-    "requestType": "hourly",
-    "api": "OpenMeteoAPI",
-    "fullApiResponse": {
-      "latitude": 32,
-      "longitude": -86,
-      "generationtime_ms": 1.1919736862182617,
-      "utc_offset_seconds": -18000,
-      "timezone": "America/Chicago",
-      "timezone_abbreviation": "CDT",
-      "elevation": 134,
-      "hourly_units": {
-        "time": "iso8601",
-        "temperature_2m": "°F"
-      },
-      "hourly": {
-        "time": [
-          "2022-04-01T00:00",
-          "2022-04-01T01:00",
-          "2022-04-01T02:00",
-          "2022-04-01T03:00",
-          "2022-04-01T04:00",
-          "2022-04-01T05:00",
-          "2022-04-01T06:00",
-          "2022-04-01T07:00",
-          "2022-04-01T08:00",
-          "2022-04-01T09:00",
-          "2022-04-01T10:00",
-          "2022-04-01T11:00",
-          "2022-04-01T12:00",
-          "2022-04-01T13:00",
-          "2022-04-01T14:00",
-          "2022-04-01T15:00",
-          "2022-04-01T16:00",
-          "2022-04-01T17:00",
-          "2022-04-01T18:00",
-          "2022-04-01T19:00",
-          "2022-04-01T20:00",
-          "2022-04-01T21:00",
-          "2022-04-01T22:00",
-          "2022-04-01T23:00"
-        ],
-        "temperature_2m": [
-          57,
-          56,
-          54.4,
-          53.6,
-          52.8,
-          51.9,
-          51,
-          50.2,
-          52.5,
-          55.9,
-          59.1,
-          62.1,
-          64.5,
-          66.7,
-          68.7,
-          69.6,
-          69.8,
-          69,
-          66.9,
-          63.1,
-          59.8,
-          57.7,
-          56.1,
-          54.6
-        ]
-      }
-    }
-  }
-
   const [state, setState] = useState();
   const [type , setType] = useState('regularFetch');
-
   const [isLoading, setIsLoading] = useState(false);
   const [info, setInfo] = useState({});
   const [selected, setSelected] = useState();
@@ -221,7 +141,6 @@ export default function StateLevelMap() {
   }, [])
 
   useEffect(() => {
-    console.log('info render')
     updateMap()
   }, [info])
 
@@ -245,8 +164,18 @@ export default function StateLevelMap() {
 
       const foundPrimaryData = primaryData.find((d) => d.info.requestState.name === selected)
       const foundSecondaryData = secondaryData.find((d) => d.info.requestState.name === selected)
-      console.log("carr", foundPrimaryData)
-      const foundState = {foundPrimaryData, foundSecondaryData}
+
+ 
+      const foundCompareData = {...foundPrimaryData}
+      const foundCompareDataInfo = {...foundPrimaryData.info}
+      const temperatureDifference =  foundPrimaryData.info.temperature - foundSecondaryData.info.temperature
+      foundCompareDataInfo.temperature = temperatureDifference.toFixed(1)
+      foundCompareDataInfo.period = `N/A`
+      foundCompareDataInfo.date = `${secondaryDate} - ${primaryDate}`
+      foundCompareData.info = foundCompareDataInfo
+      
+      
+      const foundState = {foundPrimaryData, foundSecondaryData, foundCompareData}
       setType('compare')
       setState(foundState)
 
