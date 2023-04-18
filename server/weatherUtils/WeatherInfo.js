@@ -111,9 +111,10 @@ class WeatherInfo { // This class is the parent class for the other classes
      */
 
     static async getInfo(state, date =  dayjs(), type = 'hourly') { // This function attempts to get the weather data from the 3 APIs, if one fails it will try the next one
-        
+       
         try {
             const weatherData = await WeatherInfo.openMeteoAPI(state, date, type);
+          
             return weatherData
         
             } catch (error) {
@@ -130,14 +131,34 @@ class WeatherInfo { // This class is the parent class for the other classes
      * @param {*} type  The type of weather data to get, defaults to hourly
      * @returns  Returns an array of weather data for every state in the states array
      */
-// TODO: change for loop to promise.all or allsettled
+
     static async getAllInfo(date, type) { // This function attempts to get data for every state in the states array, needs to be awaited
         const weatherArray = []
+        const apiArray = []
         for (const state of states) {
-            const weather = await WeatherInfo.getInfo(state, date, type)
-            weatherArray.push(weather)
+            
+            apiArray.push(WeatherInfo.getInfo(state, date, type))
+            
+        }
+        const weatherData = await Promise.allSettled(apiArray)
+        for (const data of weatherData) {
+            if (data.status === 'fulfilled') {
+                weatherArray.push(data.value)
+            }
         }
         return weatherArray
+    }
+
+    static async getComparisonData(date, type) { // This function attempts to get data for every state in the states array, needs to be awaited
+       console.log(date)
+       
+        const primaryWeather = await WeatherInfo.getAllInfo(date[0], type)
+        
+        const secondaryWeather = await WeatherInfo.getAllInfo(date[1], type)
+        
+
+        const comparisonData = { primaryWeather: primaryWeather, secondaryWeather: secondaryWeather }
+        return comparisonData
     }
 }
 

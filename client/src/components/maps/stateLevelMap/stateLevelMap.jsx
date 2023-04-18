@@ -108,27 +108,15 @@ export default function StateLevelMap() {
     }
   }
 
-  const [state, setState] = useState(infod);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  const [state, setState] = useState();
+  const [type , setType] = useState('regularFetch');
 
   const [isLoading, setIsLoading] = useState(false);
   const [info, setInfo] = useState({});
-  const [selected, setSelected] = useState('Alabama');
+  const [selected, setSelected] = useState();
   const [mapData, setMapData] = useState({});
   const [value, setValue] = useState(dayjs('2022-04-17'));
+  const [menu , setMenu] = useState();
 
   const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -139,10 +127,7 @@ export default function StateLevelMap() {
   }
 
   async function fetchPastData(date) {
-    console.log('fetch')
-    console.log(date)
     const url = `/weather/` + date
-    console.log(url);
     const response = await fetch(url);
     const data = await response.json();
     return data
@@ -154,36 +139,49 @@ export default function StateLevelMap() {
     setInfo(data);
   }
 
+  async function fetchComparisonData(primaryDate, secondaryDate) {
+    const url = `/weather/compare/${primaryDate}/${secondaryDate}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data
+  }
 
 
-  async function compareInfo(date = '2022-04-05') { // not working
-    console.log(`arr`);
-    const currentData = await fetchData();
-    const pastData = await fetchPastData(date);
-    const arr = [] // array of objects with same information but the temperature is now current temperature - past temperature
+  async function compareInfo(n, primaryDate = '04-04-2022', secondaryDate = '03-02-2021') { // not working
 
-    for (let i = 0; i < currentData.results.length; i++) {
-      const obj = {
-        info: {
-          requestState: currentData.results[i].info.requestState.name,
-          temperature: currentData.results[i].info.temperature - pastData.results[i].info.temperature
-        }
-      }
-      arr.push(obj);
+
+
+    const data = await fetchComparisonData(primaryDate, secondaryDate);
+
+    const primaryWeather = data.results.primaryWeather
+
+    for (let i = 0; i < data.length; i++) {
+      primaryWeather[i].info.temperature = primaryWeather[i].info.temperature - secondaryWeather.results[i].info.temperature;
+
     }
+    let info = { results: [],
+    type: data.type,}
+    info.results = primaryWeather
+      let menu = { results: {primaryWeather: data.results.primaryWeather, secondaryWeather: data.results.secondaryWeather, type: data.type,}
 
-    setInfo({ results: arr });
+      }
+    setInfo(info);
+    setMenu(menu);
+
+
+
+
+
+
   }
 
   async function pastInfo() {
     setIsLoading(true);
 
-    console.log(value);
     const currentDate = dayjs(value); // Get the current date as a Day.js object
     const formattedDate = currentDate.format('YYYY-MM-DD'); // Format the date as 'YYYY-MM-DD' string
 
 
-    console.log(formattedDate);
 
     const pastData = await fetchPastData(formattedDate);
     setInfo(pastData);
@@ -191,21 +189,11 @@ export default function StateLevelMap() {
 
 
 
+  function updateMap() {
 
-
-
-  useEffect(() => {
-    currentInfo();
-  }, [])
-
-  useEffect(() => {
-
-
-
-    console.log("info changed:", info);
 
     if (info.results) {
-      
+
       const temperatures = info.results.map(d => d.info.temperature);
       const minTemperature = Math.min(...temperatures);
       const maxTemperature = Math.max(...temperatures);
@@ -215,7 +203,6 @@ export default function StateLevelMap() {
         .interpolator(d3.interpolateRdYlBu)
         .domain([maxTemperature, minTemperature]);
 
-      console.log("updating mapData with info:", info.results);
       const mapData = info.results.reduce((acc, d) => {
         acc[d.info.requestState.name] = colorScale(d.info.temperature);
         return acc;
@@ -223,15 +210,53 @@ export default function StateLevelMap() {
       setMapData(mapData);
       setIsLoading(false);
     }
-  }, [info])
+  }
+
 
   useEffect(() => {
-    if (info.results) {
+    console.log('initial render')
+    currentInfo();
+  }, [])
+
+  useEffect(() => {
+    console.log('info render')
+    updateMap()
+  }, [info])
+
+
+
+
+
+  function mapSelectionHandler() {
+
+    if (info.type == 'regularFetch') {
       const arr = info.results;
-    console.log("Selected State", selected);
-    arr.find((d) => d.info.requestState.name === selected && setState(d.info))
-    }
-  }, [selected, info])
+      setType('regularFetch')
+      arr.find((d) => d.info.requestState.name === selected && setState(d.info))
+    
+
+
+    } else if (info.type === 'compare') {
+      console.log("menu", menu)
+      const primaryData = menu.results.primaryWeather;
+      const secondaryData = menu.results.secondaryWeather;
+
+      const foundPrimaryData = primaryData.find((d) => d.info.requestState.name === selected)
+      const foundSecondaryData = secondaryData.find((d) => d.info.requestState.name === selected)
+      console.log("carr", foundPrimaryData)
+      const foundState = {foundPrimaryData, foundSecondaryData}
+      setType('compare')
+      setState(foundState)
+
+    } 
+
+  }
+
+  useEffect(() => {
+    mapSelectionHandler()
+
+
+  }, [selected])
 
   return (
 
@@ -268,7 +293,7 @@ TODO: add a legend that shows the temperature range and the colors that correspo
 
               <Grid item>
 
-                <Button variant="contained" onClick={compareInfo} disabled>
+                <Button variant="contained" onClick={compareInfo}>
                   Compare
                 </Button>
 
@@ -310,8 +335,8 @@ TODO: add a legend that shows the temperature range and the colors that correspo
 
         <Box>
           <Grid container spacing={2} sx={{ justifyContent: 'center', alignItems: 'center' }}>
-           
-           
+
+
             {/* Map Element */}
             <Grid item xs={12} lg={8}>
 
@@ -402,7 +427,7 @@ TODO: add a legend that shows the temperature range and the colors that correspo
             <Grid item xs={12} lg={4}>
 
               <Box sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                <StateInfo state={state} />
+                { (state) && <StateInfo data={state} type={type} /> }
               </Box>
 
             </Grid>

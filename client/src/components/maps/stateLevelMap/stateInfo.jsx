@@ -1,10 +1,30 @@
-import { Divider, Typography, Box, Grid, Paper, TableCell, TableBody, Table, TableRow, TableHead, TableContainer } from '@mui/material';
+import { Stack, Button, Divider, Typography, Box, Grid, Paper, TableCell, TableBody, Table, TableRow, TableHead, TableContainer } from '@mui/material';
 import Statistic from './statistic';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function StateInfo(props) {
+    const regularFetch = {info: props.data}
 
-    const { name, abbreviation, capital, latitude, longitude} = props.state.requestState;
-    const { date, period, temperature, requestType } = props.state;
+    const [range, setRange] = useState('foundPrimaryData');
+    let dataTransfer
+
+        if (props.type === 'regularFetch') {
+
+        dataTransfer = regularFetch
+
+        } else  {
+            dataTransfer = props.data[range]
+        }
+
+    
+
+    console.log(dataTransfer)
+    
+
+
+    const { name, abbreviation, capital, latitude, longitude} = dataTransfer.info.requestState;
+    const { date, period, temperature, requestType } = dataTransfer.info;
 
 
     const apiInfo = {
@@ -29,6 +49,10 @@ export default function StateInfo(props) {
 
     return (
         <Box sx={{ justifyContent: "center", padding: '3%', minHeight: '50vh', backgroundColor: '#1a1a1a', borderColor: '#c6d300', borderRadius: 4, borderWidth: 3, borderStyle: 'solid', maxWidth: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+           <Stack direction="row" spacing={1}>
+            <Button variant="contained" sx={{ backgroundColor: '#c6d300', color: '#1a1a1a', marginRight: 1 }} onClick={() => setRange('foundPrimaryData')}>Primary Date</Button>
+            <Button variant="contained" sx={{ backgroundColor: '#c6d300', color: '#1a1a1a', marginLeft: 1 }} onClick={() => setRange('foundSecondaryData')}>Secondary Date</Button>
+            </Stack>
             <Typography variant='h2' sx={{ color: '#c6d300', marginBottom: 1 }}>{stateInfo.Name}</Typography>
             <Divider sx={{ width: '100%', marginBottom: 2 }} />
             <Grid container spacing={2} sx={{ justifyContent: 'center', width: '100%' }}>
