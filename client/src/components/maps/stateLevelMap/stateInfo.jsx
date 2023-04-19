@@ -10,6 +10,7 @@ import { useState } from 'react';
 // 3. Make Table Scrollable
 // 4. Add a button to switch between Fahrenheit and Celsius
 // 5. Add a button to switch between Hourly and Daily
+// 6. Date value in table could be dayjs(date 1) - dayjs(date 2) to show the difference in days maybe, definitley add time.
 
 
 export default function StateInfo(props) {
