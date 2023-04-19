@@ -1,0 +1,258 @@
+export default function StateInfo(props) {
+    const regularFetch = {info: props.data}
+    const [range, setRange] = useState('foundPrimaryData');
+    let dataTransfer
+
+        if (props.type === 'regularFetch') {
+
+        dataTransfer = regularFetch
+
+        } else {
+            dataTransfer = props.data[range]
+        }
+    const { name, abbreviation, capital, latitude, longitude} = dataTransfer.info.requestState;
+    const { date, period, temperature, requestType } = dataTransfer.info;
+    const apiInfo = {
+        "Date": date,
+        "Period": period,
+        "Temperature": temperature,
+        "Request Type": requestType,
+      }
+      const stateInfo = {
+        "Name": name,
+        "Abbreviation": abbreviation,
+        "Capital": capital,
+        "Latitude": latitude,
+        "Longitude": longitude,
+      }
+    const { Temperature } = apiInfo;
+    const keys = Object.keys(apiInfo);
+    const values = Object.values(apiInfo);
+    const datetime = new Date(values[0]).toLocaleDateString();
+export default function StateLevelMap() {
+  const [state, setState] = useState();
+  const [type , setType] = useState('regularFetch');
+  const [isLoading, setIsLoading] = useState(false);
+  const [info, setInfo] = useState({});
+  const [selected, setSelected] = useState();
+  const [mapData, setMapData] = useState({});
+  const [pastDate, setPastDate] = useState(dayjs('2022-04-17'));
+  const [primaryDate, setPrimaryDate] = useState(dayjs('2022-04-17'));
+  const [secondaryDate, setSecondaryDate] = useState(dayjs('2021-04-17'));
+  const [menu , setMenu] = useState();
+  const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+  async function fetchData() {
+    const response = await fetch('/weather');
+    const data = await response.json();
+    return data
+  }
+  async function fetchPastData(date) {
+    const url = `/weather/` + date
+    const response = await fetch(url);
+    const data = await response.json();
+    return data
+  } async function currentInfo() {
+    setIsLoading(true);
+    const data = await fetchData();
+    setInfo(data);
+  } async function fetchComparisonData(primaryDate, secondaryDate) {
+    const url = `/weather/compare/${primaryDate}/${secondaryDate}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data
+  } async function compareInfo() {
+    const data = await fetchComparisonData(primaryDate, secondaryDate);
+    const primaryWeather = data.results.primaryWeather
+    for (let i = 0; i < data.length; i++) {
+      primaryWeather[i].info.temperature = primaryWeather[i].info.temperature - secondaryWeather.results[i].info.temperature;
+    let info = { results: [],
+    type: data.type,}
+    info.results = primaryWeather
+      let menu = { results: {primaryWeather: data.results.primaryWeather, secondaryWeather: data.results.secondaryWeather, type: data.type,}
+      }
+    setInfo(info);
+    setMenu(menu);
+  }
+  async function pastInfo() {
+    setIsLoading(true);
+    const currentDate = dayjs(pastDate); // Get the current date as a Day.js object
+    const formattedDate = currentDate.format('YYYY-MM-DD'); // Format the date as 'YYYY-MM-DD' string
+const pastData = await fetchPastData(formattedDate);
+    setInfo(pastData);
+  }
+  function updateMap() {
+    if (info.results) {
+      const temperatures = info.results.map(d => d.info.temperature);
+      const minTemperature = Math.min(...temperatures);
+      const maxTemperature = Math.max(...temperatures);
+      const colorScale = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRdYlBu)
+        .domain([maxTemperature, minTemperature]);
+      const mapData = info.results.reduce((acc, d) => {
+        acc[d.info.requestState.name] = colorScale(d.info.temperature);
+        return acc;
+      }, {});
+      setMapData(mapData);
+      setIsLoading(false);
+    }
+  }
+  useEffect(() => {
+    console.log('initial render')
+    currentInfo();
+  }, [])
+  useEffect(() => {
+    updateMap()
+  }, [info])
+  function mapSelectionHandler() {
+    if (info.type == 'regularFetch') {
+      const arr = info.results;
+      setType('regularFetch')
+      arr.find((d) => d.info.requestState.name === selected && setState(d.info))
+    } else if (info.type === 'compare') {
+      console.log("menu", menu)
+      const primaryData = menu.results.primaryWeather;
+      const secondaryData = menu.results.secondaryWeather;
+
+      const foundPrimaryData = primaryData.find((d) => d.info.requestState.name === selected)
+      const foundSecondaryData = secondaryData.find((d) => d.info.requestState.name === selected)
+const foundCompareData = {...foundPrimaryData}
+      const foundCompareDataInfo = {...foundPrimaryData.info}
+      const temperatureDifference =  foundPrimaryData.info.temperature - foundSecondaryData.info.temperature
+      foundCompareDataInfo.temperature = temperatureDifference.toFixed(1)
+      foundCompareDataInfo.period = `N/A`
+      foundCompareDataInfo.date = `${secondaryDate} - ${primaryDate}`
+      foundCompareData.info = foundCompareDataInfo
+      const foundState = {foundPrimaryData, foundSecondaryData, foundCompareData}
+      setType('compare')
+      setState(foundState)
+    } 
+  }
+  useEffect(() => {
+    mapSelectionHandler()
+  }, [selected])
+}
+export default function StateLevelMap() {
+  const [state, setState] = useState();
+  const [type , setType] = useState('regularFetch');
+  const [isLoading, setIsLoading] = useState(false);
+  const [info, setInfo] = useState({});
+  const [selected, setSelected] = useState();
+  const [mapData, setMapData] = useState({});
+  const [pastDate, setPastDate] = useState(dayjs('2022-04-17'));
+  const [primaryDate, setPrimaryDate] = useState(dayjs('2022-04-17'));
+  const [secondaryDate, setSecondaryDate] = useState(dayjs('2021-04-17'));
+  const [menu , setMenu] = useState();
+  const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+  async function fetchData() {
+    const response = await fetch('/weather');
+    const data = await response.json();
+    return data
+  }
+  async function fetchPastData(date) {
+    const url = `/weather/` + date
+    const response = await fetch(url);
+    const data = await response.json();
+    return data
+  }
+  async function currentInfo() {
+    setIsLoading(true);
+    const data = await fetchData();
+    setInfo(data);
+  }
+  async function fetchComparisonData(primaryDate, secondaryDate) {
+    const url = `/weather/compare/${primaryDate}/${secondaryDate}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data
+  }
+  async function compareInfo() { // not working
+    const data = await fetchComparisonData(primaryDate, secondaryDate);
+    const primaryWeather = data.results.primaryWeather
+    for (let i = 0; i < data.length; i++) {
+      primaryWeather[i].info.temperature = primaryWeather[i].info.temperature - secondaryWeather.results[i].info.temperature;
+    }
+    let info = { results: [],
+    type: data.type,}
+    info.results = primaryWeather
+      let menu = { results: {primaryWeather: data.results.primaryWeather, secondaryWeather: data.results.secondaryWeather, type: data.type,}
+      }
+    setInfo(info);
+    setMenu(menu);
+  }
+  async function pastInfo() {
+    setIsLoading(true);
+    const currentDate = dayjs(pastDate); // Get the current date as a Day.js object
+    const formattedDate = currentDate.format('YYYY-MM-DD'); // Format the date as 'YYYY-MM-DD' string
+    const pastData = await fetchPastData(formattedDate);
+    setInfo(pastData);
+  }
+function updateMap() {
+    if (info.results) {
+      const temperatures = info.results.map(d => d.info.temperature);
+      const minTemperature = Math.min(...temperatures);
+      const maxTemperature = Math.max(...temperatures);
+      const colorScale = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateRdYlBu)
+        .domain([maxTemperature, minTemperature]);
+      const mapData = info.results.reduce((acc, d) => {
+        acc[d.info.requestState.name] = colorScale(d.info.temperature);
+        return acc;
+      }, {});
+      setMapData(mapData);
+      setIsLoading(false);
+    }
+  }
+  useEffect(() => {
+    console.log('initial render')
+    currentInfo();
+  }, [])
+  useEffect(() => {
+    updateMap()
+  }, [info])
+  function mapSelectionHandler() {
+    if (info.type == 'regularFetch') {
+      const arr = info.results;
+      setType('regularFetch')
+      arr.find((d) => d.info.requestState.name === selected && setState(d.info))
+} else if (info.type === 'compare') {
+      console.log("menu", menu)
+      const primaryData = menu.results.primaryWeather;
+      const secondaryData = menu.results.secondaryWeather;
+      const foundPrimaryData = primaryData.find((d) => d.info.requestState.name === selected)
+      const foundSecondaryData = secondaryData.find((d) => d.info.requestState.name === selected)
+      const foundCompareData = {...foundPrimaryData}
+      const foundCompareDataInfo = {...foundPrimaryData.info}
+      const temperatureDifference =  foundPrimaryData.info.temperature - foundSecondaryData.info.temperature
+      foundCompareDataInfo.temperature = temperatureDifference.toFixed(1)
+      foundCompareDataInfo.period = `N/A`
+      foundCompareDataInfo.date = `${secondaryDate} - ${primaryDate}`
+      foundCompareData.info = foundCompareDataInfo
+      const foundState = {foundPrimaryData, foundSecondaryData, foundCompareData}
+      setType('compare')
+      setState(foundState)
+    } 
+  }
+  useEffect(() => {
+    mapSelectionHandler()
+  }, [selected])
+}
+function Statistic(props) {
+    const trendDirection = (props.temperature > 0)
+    return (
+        <Box>
+            <Stack direction="row" spacing={1}>
+                {trendDirection ? <ArrowDropUpIcon sx={{ color: 'green'}} /> : <ArrowDropDownIcon sx={{ color: 'red'}} />}
+                <Typography variant="h3" sx={{ color: "#c6d300"}}>{props.temperature}º</Typography>
+            </Stack>
+        </Box>
+    )
+}
+export default Statistic
+export default function App() {
+  return (
+    <StateLevelMap/>
+
+  );
+}
