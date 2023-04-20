@@ -12,7 +12,7 @@ const Redis = require('ioredis');
 
 async function cacheValidate(key, callback) {
 
-  const client = new Redis();
+  const client = new Redis(process.env.REDIS_URL);
 
   try {
 
