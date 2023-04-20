@@ -1,6 +1,8 @@
 const { dateModifier  } = require('../tools/dateModifier.js');
 const { cacheValidate } = require('../tools/cacheValidate.js');
 const { requestPeriod } = require('../tools/requestPeriod.js');
+const fetch = require('node-fetch');
+
 
 
 /**
