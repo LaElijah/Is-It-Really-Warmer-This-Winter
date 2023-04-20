@@ -1,6 +1,6 @@
 const { getOpenMeteoData } = require('./APIs/OpenMeteoAPI');
 const { getWeatherData } = require('./APIs/WeatherAPI');
-const { fetch } = require('node-fetch');
+const fetch = require('node-fetch');
 const dayjs = require('dayjs');
 const { states } = require("./states");
 
