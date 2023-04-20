@@ -25,9 +25,11 @@ class WeatherInfo { // This class is the parent class for the other classes
      * @returns  Returns an Object with weather data from OpenMeteoAPI Must be awaited
      */
     static async openMeteoAPI(state, date, type) {
-        
 
+        
+        console.log("openMeteoAPI")
         const response = await getOpenMeteoData(state, date, type);
+        console.log(response)
 
         // Object Setters
 
