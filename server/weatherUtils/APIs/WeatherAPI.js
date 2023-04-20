@@ -1,4 +1,4 @@
-const fetch = require('node-fetch').default;
+const { fetch } = require('node-fetch');
 const { cacheValidate } = require("../tools/cacheValidate");
 const { dateModifier } = require("../tools/dateModifier");
 const { requestPeriod } = require("../tools/requestPeriod");
